@@ -63,16 +63,8 @@ if __name__ == "__main__":
         transforms.ToTensor(),
     ])
 
-
-    transform_train_2 = transforms.Compose([
-        transforms.Resize([224, 224]),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
-    ])
-
     transform_train_3 = transforms.Compose([
         transforms.Resize([224, 224]),
-        transforms.RandomHorizontalFlip(),
         transforms.RandomAffine(0, shear=10, scale=(0.8, 1.2)),
         transforms.ToTensor(),
     ])
@@ -86,13 +78,11 @@ if __name__ == "__main__":
 
     train_ds = Mydataset('./captcha', transform=transform)
     train_ds_1 = Mydataset('./captcha', transform=transform_train_1)
-    train_ds_2 = Mydataset('./captcha', transform=transform_train_2)
     train_ds_3 = Mydataset('./captcha', transform=transform_train_3)
     train_ds_4 = Mydataset('./captcha', transform=transform_train_4)
     test_ds = Mydataset('./captcha', False, transform)
     train_dl = DataLoader(train_ds, batch_size=64, num_workers=0)
     train_dl_1 = DataLoader(train_ds_1, batch_size=64, num_workers=0)
-    train_dl_2 = DataLoader(train_ds_2, batch_size=64, num_workers=0)
     train_dl_3 = DataLoader(train_ds_3, batch_size=64, num_workers=0)
     train_dl_4 = DataLoader(train_ds_4, batch_size=64, num_workers=0)
     test_dl = DataLoader(train_ds, batch_size=1, num_workers=0)
@@ -125,16 +115,6 @@ if __name__ == "__main__":
             optm.step()
             print('epoch:', epoch + 1, 'step:', step + 1, 'loss:', loss.item())
 
-        for step, i in enumerate(train_dl_2):
-            img, label_oh, label = i
-            img = Variable(img)
-            label_oh = Variable(label_oh.float())
-            pred = model(img)
-            loss = loss_func(pred, label_oh)
-            optm.zero_grad()
-            loss.backward()
-            optm.step()
-            print('epoch:', epoch + 1, 'step:', step + 1, 'loss:', loss.item())
 
         for step, i in enumerate(train_dl_3):
             img, label_oh, label = i
